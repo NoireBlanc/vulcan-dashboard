@@ -1,0 +1,50 @@
+imports:
+  - git:
+      url: "https://gecgithub01.walmart.com/gscope-platform/gscope-ci-scripts.git"
+      path: "mfe_concord/concord"
+      version: "1.0.141"
+  - git:
+      url: "https://gecgithub01.walmart.com/gscope-platform/gscope-ci-scripts.git"
+      dest: "./forms"
+      path: "mfe_concord/forms"
+      version: "1.0.141"
+
+configuration:
+  runtime: "concord-v2"
+    
+  arguments:
+    GSCOPE_INFRA: "gscope"
+    MFE_ENVS:
+      gscope: ['development', 'dev', 'pqa', 'platform', 'stg', 'integration', 'cert', 'prod']
+    module_ad_group: <YOUR_AD_GROUP>
+    slack_channel: <YOUR_SLACK_CHANNEL>
+    slack_icon: ":concord:"
+    concordHost: "concord.prod.walmart.com"
+    MODULE_MFE_TOKEN: ${crypto.decryptString("<YOUR_MFE_TOKEN>")}
+    MODULE_MFE_TOKEN_PROD: ""
+    MFE_URL: ""
+    looperParams:
+      username: <LOOPER_USERNAME>
+      baseUrl: https://ci.falcon.walmart.com
+      apiToken: ${crypto.decryptString("<LOOPER_API_TOKEN>")}
+      jobName: <LOOPER_JOB_PATH>
+      scmUrl: <GIT_REPO>
+      commitToGit: false
+      runTests: false
+    revertFlow: false
+    MODULE_VERSION: ""
+    MODULE_NAME: ${resource.asJson('package.json').name}
+    ENV: ""
+    MFE_STATIC_SERVER_MAP:
+      gscope:
+        dev: <YOUR_STATIC_SERVER>
+        pqa: <YOUR_STATIC_SERVER>
+        platform: <YOUR_STATIC_SERVER>
+        stg: <YOUR_STATIC_SERVER>
+        integration: <YOUR_STATIC_SERVER>
+        cert: <YOUR_STATIC_SERVER>
+        development: <YOUR_STATIC_SERVER>
+        prod: <YOUR_STATIC_SERVER>
+        prod_external: <YOUR_STATIC_SERVER>
+    MFE_CONFIG_SERVICE: ""
+

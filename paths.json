@@ -1,0 +1,10 @@
+{
+    "_schemaVersion": "1.0",
+    "paths": {
+        "/mfe/poc/home": {
+            "appName": "Home",
+            "bucket": "MfePoc",
+            "isPOC": true
+        }
+    }
+}

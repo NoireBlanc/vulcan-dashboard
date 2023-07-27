@@ -1,0 +1,8 @@
+{
+    "extends": "gscope-fe-config/typescript/tsconfig.mfe.json",
+    "compilerOptions": {
+        "declarationDir": "dist"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test*"]
+}
