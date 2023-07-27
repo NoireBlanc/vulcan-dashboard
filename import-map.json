@@ -1,0 +1,6 @@
+{
+    "_schemaVersion": "1.0",
+    "imports": {
+        "@gscope-mfe/vulcan-dashboard": "//localhost:9000/gscope-mfe-vulcan-dashboard.js"
+    }
+}

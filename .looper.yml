@@ -1,0 +1,2 @@
+inherit:
+- job:///Gscope-MFE-Modules/mfe-looper-template:v1.yml
