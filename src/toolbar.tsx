@@ -20,7 +20,7 @@ export default function Toolbar({ fetch }) {
     const { isLoading: carriersLoading, data: carrierData } = useQuery('carriers', fetchCarriers);
     const [milestoneIds, setMilestoneIds] = React.useState<string[]>([]);
     const [milestoneDescs, setMilestoneDescs] = React.useState<string[]>([]);
-    const [milestones, setMilestones] = React.useState(new Map());
+    const [milestones, setMilestones] = React.useState<Map<string, string>>(new Map<string, string>());
     const [carrierIds, setCarrierIds] = React.useState<string[]>([]);
     const [milestonesReady, setMilestonesReady] = React.useState(false);
     const [carriersReady, setCarriersReady] = React.useState(false);
@@ -51,7 +51,7 @@ export default function Toolbar({ fetch }) {
                 setMilestoneIds((milestoneIds) => [...milestoneIds, milestone.id]);
                 const name = milestone.id + ' - ' + milestone.desc;
                 setMilestoneDescs((milestoneDescs) => [...milestoneDescs, name]);
-                setMilestones((milestones) => new Map(milestones.set(name, milestone.id)));
+                setMilestones((milestones) => new Map<string, string>(milestones.set(name, milestone.id)));
             }
         });
         setMilestonesReady(true);
@@ -77,9 +77,15 @@ export default function Toolbar({ fetch }) {
         chooseFilters(milestoneIds, 'milestones');
         setMilestoneDescs((milestoneDescs) =>
             Array.from(
-                milestoneDescs.sort((a, b) => {
-                    const value1 = parseInt(milestones.get(a));
-                    const value2 = parseInt(milestones.get(b));
+                milestoneDescs.sort((a: string, b: string) => {
+                    let value1: any = milestones.get(a);
+                    let value2: any = milestones.get(b);
+
+                    if (!value1 || !value2) return 0;
+
+                    value1 = parseInt(value1);
+                    value2 = parseInt(value2);
+
                     if (value1 < value2) {
                         return -1;
                     }
@@ -104,7 +110,7 @@ export default function Toolbar({ fetch }) {
 
     if (!carriersReady || !milestonesReady) return <p>Loading...</p>;
     return (
-        <div style={{ width: '95vw', maxWidth: '95vw', height: '170px', display: 'inline-flex', flexDirection: 'row' }}>
+        <div style={{ width: '100%', maxWidth: '100%', height: '170px', display: 'inline-flex', flexDirection: 'row' }}>
             <div style={{ display: 'inline-flex', flexDirection: 'column', height: '100%' }}>
                 <div>
                     <MultipleSelectCheckmarks
@@ -145,7 +151,7 @@ export default function Toolbar({ fetch }) {
                     />
                 </div>
             </div>
-            <div style={{ display: 'inline-flex', flexDirection: 'row', flexWrap: 'wrap', maxWidth: '80%' }}>
+            <div style={{ display: 'inline-flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                 <MultipleSelectCheckmarks
                     names={CHANNELS}
                     label="Channels"
@@ -163,8 +169,8 @@ export default function Toolbar({ fetch }) {
                     label="Milestones"
                     attr="milestones"
                     chooseFilter={(message, attr) => {
-                        const milestoneList = [];
-                        message.forEach((milestone) => {
+                        const milestoneList: any[] = [];
+                        message.forEach((milestone: string) => {
                             milestoneList.push(milestones.get(milestone));
                         });
                         chooseFilters(milestoneList, attr);
@@ -176,7 +182,7 @@ export default function Toolbar({ fetch }) {
                     attr="channels"
                     chooseFilter={chooseFilters}
                 />
-                <Box display="flex" height="40px" marginLeft="auto" marginRight="25px" marginTop="10px">
+                <Box display="flex" height="40px" marginLeft="auto" marginRight="auto" marginTop="10px">
                     <Button variant="contained" onClick={handleButton} size="medium">
                         Apply Filters
                     </Button>

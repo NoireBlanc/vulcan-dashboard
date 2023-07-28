@@ -1,7 +1,7 @@
 import React from 'react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { Router, Switch, Route, Link } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -14,7 +14,7 @@ import {
 } from '@gscope-mfe/common-libs';
 // @ts-ignore
 import { gscopeTheme } from '@gscope-mfe/common-components';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { fetchData } from './queries';
 import { formatPieData } from './utils/formatPieData.util';
 import Grid from './components/grid';
@@ -66,9 +66,9 @@ export default function Root() {
 }
 
 function Home() {
-    const [shipmentData, setShipmentData] = React.useState([]);
+    const [shipmentData, setShipmentData] = React.useState<any[]>([]);
     const [loadGrid, setLoadGrid] = React.useState(false);
-    const [pieData, setPieData] = React.useState([]);
+    const [pieData, setPieData] = React.useState<any[][]>([]);
     const [message, setMessage] = React.useState<string>('No data available.');
 
     const fetch = async (filters) => {
@@ -90,7 +90,7 @@ function Home() {
         if (!shipmentData || shipmentData.length === 0) return;
 
         for (let i = 0; i < 4; i++) {
-            setPieData((pieData) => [...pieData, formatPieData(shipmentData[i].counts)]);
+            setPieData((pieData: any[][]) => [...pieData, formatPieData(shipmentData[i].counts)]);
         }
 
         setLoadGrid(true);
@@ -98,7 +98,7 @@ function Home() {
 
     React.useEffect(formatData, [shipmentData]);
     return (
-        <div style={{ minHeight: '88vh', display: 'flex', flexFlow: 'column' }}>
+        <div style={{ height: '87vh', display: 'flex', flexFlow: 'column', maxWidth: '100%' }}>
             <div style={{ flex: '0 1 auto' }}>
                 <Toolbar fetch={fetch} />
             </div>
