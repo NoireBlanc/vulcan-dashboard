@@ -109,11 +109,11 @@ export default function Chart({ pieData, title }) {
                     </Pie>
                     <text
                         x="50%"
-                        y="80%"
+                        y="77%"
                         fontWeight={'bold'}
                         textAnchor="middle"
                     >{`Legend Keys: ${pieData.length}`}</text>
-                    <Legend onClick={legendHandler} verticalAlign={'bottom'} height="15%" />
+                    <Legend onClick={legendHandler} verticalAlign={'bottom'} height="20%" />
                 </PieChart>
             </ResponsiveContainer>
         </Box>
