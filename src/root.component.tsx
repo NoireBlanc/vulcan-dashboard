@@ -15,11 +15,11 @@ import {
 // @ts-ignore
 import { gscopeTheme } from '@gscope-mfe/common-components';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { fetchData } from './queries';
+import { fetchData } from './utils/queries';
 import { formatPieData } from './utils/formatPieData.util';
 import Grid from './components/grid';
 import Charts from './components/charts';
-import Toolbar from './toolbar';
+import Toolbar from './components/toolbar';
 import { CHANNELS, SENDER_TYPES, SHIPMENT_TYPES } from './constants/data';
 
 export const queryClient = new QueryClient();
