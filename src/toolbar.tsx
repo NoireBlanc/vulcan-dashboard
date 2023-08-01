@@ -15,7 +15,7 @@ import { useQuery } from 'react-query';
 const { Button, Box } = MaterialUiCore;
 const DateRangePicker = _DateRangePickerModule.default;
 
-export default function Toolbar({ fetch }) {
+export default function Toolbar({ fetch, chooseFilters }) {
     const { isLoading: milestonesLoading, data: milestoneData } = useQuery('milestones', fetchMilestones);
     const { isLoading: carriersLoading, data: carrierData } = useQuery('carriers', fetchCarriers);
     const [milestoneIds, setMilestoneIds] = React.useState<string[]>([]);
@@ -24,26 +24,8 @@ export default function Toolbar({ fetch }) {
     const [carrierIds, setCarrierIds] = React.useState<string[]>([]);
     const [milestonesReady, setMilestonesReady] = React.useState(false);
     const [carriersReady, setCarriersReady] = React.useState(false);
-    const [filters, setFilters] = React.useState({
-        created_on: { start: new Date(Date.now()).toISOString(), end: new Date(Date.now()).toISOString() },
-        oedd: { start: new Date(Date.now()).toISOString(), end: new Date(Date.now()).toISOString() },
-        carriers: [],
-        types: SHIPMENT_TYPES,
-        senderTypes: SENDER_TYPES,
-        channels: CHANNELS,
-        milestones: [],
-    });
     const [open, setOpen] = React.useState(false);
     const [oeddOpen, setOeddOpen] = React.useState(false);
-
-    const chooseFilters = (message, attr) => {
-        const filter = {};
-        filter[attr] = message;
-        setFilters((filters) => ({
-            ...filters,
-            ...filter,
-        }));
-    };
 
     const processMilestoneData = () => {
         milestoneData.payload.forEach((milestone) => {
@@ -70,7 +52,7 @@ export default function Toolbar({ fetch }) {
     };
 
     const handleButton = () => {
-        fetch(filters);
+        fetch();
     };
 
     React.useEffect(() => {

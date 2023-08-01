@@ -20,8 +20,9 @@ import { formatPieData } from './utils/formatPieData.util';
 import Grid from './components/grid';
 import Charts from './components/charts';
 import Toolbar from './toolbar';
+import { CHANNELS, SENDER_TYPES, SHIPMENT_TYPES } from './constants/data';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const pubSub = new PubSub('@gscope-mfe/vulcan-dashboard');
 const { MuiPickersUtilsProvider } = MaterialUiPickers;
@@ -67,45 +68,79 @@ export default function Root() {
 
 function Home() {
     const [shipmentData, setShipmentData] = React.useState<any[]>([]);
+    const [rawPie, setRawPie] = React.useState<any[]>([]);
     const [loadGrid, setLoadGrid] = React.useState(false);
     const [pieData, setPieData] = React.useState<any[][]>([]);
+    const [totalHits, setTotalHits] = React.useState<number>(0);
     const [message, setMessage] = React.useState<string>('No data available.');
+    const [filters, setFilters] = React.useState({
+        created_on: { start: new Date(Date.now()).toISOString(), end: new Date(Date.now()).toISOString() },
+        oedd: { start: new Date(Date.now()).toISOString(), end: new Date(Date.now()).toISOString() },
+        carriers: [],
+        types: SHIPMENT_TYPES,
+        senderTypes: SENDER_TYPES,
+        channels: CHANNELS,
+        milestones: [],
+    });
 
-    const fetch = async (filters) => {
+    const fetch = async () => {
         setLoadGrid(false);
         setMessage('Loading...');
         setPieData([]);
-        const data = await queryClient.fetchQuery('data', () => fetchData(filters));
+        const pie = await queryClient.fetchQuery('data', () => fetchData(filters, true, 0));
+        const data = await queryClient.fetchQuery('data', () => fetchData(filters, false, 0));
 
-        if (data.errors) {
+        if (pie.errors) {
+            setMessage(`Error ${pie.errors[0].code}: ${pie.errors[0].description}`);
+        } else if (data.errors) {
             setMessage(`Error ${data.errors[0].code}: ${data.errors[0].description}`);
-        } else if (data.payload.slice(4).length === 0) {
+        } else if (data.payload.length === 0) {
             setMessage('No shipments available for given filters.');
         } else {
             setShipmentData(data.payload);
+            setRawPie(pie.payload);
         }
+    };
+
+    const chooseFilters = (message, attr) => {
+        const filter = {};
+        filter[attr] = message;
+        setFilters((filters) => ({
+            ...filters,
+            ...filter,
+        }));
     };
 
     const formatData = () => {
         if (!shipmentData || shipmentData.length === 0) return;
 
         for (let i = 0; i < 4; i++) {
-            setPieData((pieData: any[][]) => [...pieData, formatPieData(shipmentData[i].counts)]);
+            setPieData((pieData: any[][]) => [...pieData, formatPieData(rawPie[i].counts)]);
         }
+    };
 
+    const setHits = () => {
+        if (pieData.length === 0) return;
+
+        let t = 0;
+        pieData[1].forEach((count) => {
+            t += count.value;
+        });
+        setTotalHits(t);
         setLoadGrid(true);
     };
 
-    React.useEffect(formatData, [shipmentData]);
+    React.useEffect(formatData, [rawPie]);
+    React.useEffect(setHits, [pieData]);
     return (
         <div style={{ height: '87vh', display: 'flex', flexFlow: 'column', maxWidth: '100%' }}>
             <div style={{ flex: '0 1 auto' }}>
-                <Toolbar fetch={fetch} />
+                <Toolbar fetch={fetch} chooseFilters={chooseFilters} />
             </div>
             {loadGrid ? (
                 <>
                     <Charts pieData={pieData} />
-                    <Grid data={shipmentData.slice(4)} />
+                    <Grid data={shipmentData} totalHits={totalHits} filters={filters} />
                 </>
             ) : (
                 <div
