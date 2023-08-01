@@ -1,5 +1,5 @@
 import React from 'react';
-import MultipleSelectCheckmarks from './components/multiCheckSelect';
+import MultipleSelectCheckmarks from './multiCheckSelect';
 import {
     DateRangePicker as _DateRangePickerModule,
     // @ts-ignore
@@ -8,8 +8,8 @@ import {
     MaterialUiCore,
     // @ts-ignore
 } from '@gscope-mfe/common-libs';
-import { SHIPMENT_TYPES, SENDER_TYPES, CHANNELS } from './constants/data';
-import { fetchCarriers, fetchMilestones } from './queries';
+import { SHIPMENT_TYPES, SENDER_TYPES, CHANNELS } from '../constants/data';
+import { fetchCarriers, fetchMilestones } from '../utils/queries';
 import { useQuery } from 'react-query';
 
 const { Button, Box } = MaterialUiCore;
@@ -157,12 +157,6 @@ export default function Toolbar({ fetch, chooseFilters }) {
                         });
                         chooseFilters(milestoneList, attr);
                     }}
-                />
-                <MultipleSelectCheckmarks
-                    names={CHANNELS}
-                    label="Channels"
-                    attr="channels"
-                    chooseFilter={chooseFilters}
                 />
                 <Box display="flex" height="40px" marginLeft="auto" marginRight="auto" marginTop="10px">
                     <Button variant="contained" onClick={handleButton} size="medium">

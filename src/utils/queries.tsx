@@ -1,5 +1,5 @@
-import { buildUrl } from './utils/buildUrl.util';
-import axios from './axios';
+import { buildUrl } from './buildUrl.util';
+import axios from '../axios';
 
 export const fetchCarriers = async ({ queryKey }) => {
     const { _key } = queryKey;
@@ -28,7 +28,7 @@ export const fetchMilestones = async ({ queryKey }) => {
 };
 
 export const fetchData = async (filters, pieData, from) => {
-    let url = `http://localhost:8000/tnt_inbound_service_war/api/package/shipments/start-date/${filters.created_on.start}/end-date/${filters.created_on.end}?`;
+    let url = `http://stride-tnt-inbound-package.wcnp.stg.walmart.com/tnt-inbound-service/api/package/shipments/start-date/${filters.created_on.start}/end-date/${filters.created_on.end}?`;
 
     if (filters.oedd.start && filters.oedd.end) {
         url += `oeddStart=${filters.oedd.start}&oeddEnd=${filters.oedd.end}`;

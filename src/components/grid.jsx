@@ -8,7 +8,7 @@ import {
     useGridApiContext,
 } from '@mui/x-data-grid';
 import { mapToShipment } from '../utils/mapToShipment.util';
-import { fetchData } from '../queries';
+import { fetchData } from '../utils/queries';
 import { queryClient } from '../root.component';
 import { MenuItem, Box } from '@mui/material';
 
@@ -53,7 +53,9 @@ export default function Grid({ data, totalHits, filters }) {
             formattedRows.push(mapToShipment(shipment));
         });
 
-        apiRef.current.updateRows(formattedRows);
+        formattedRows.forEach((shipment) => {
+            apiRef.current.updateRows([shipment]);
+        });
 
         apiRef.current.exportDataAsCsv();
     };
@@ -106,6 +108,10 @@ export default function Grid({ data, totalHits, filters }) {
 
     const updateGrid = async (from) => {
         const temp = await queryClient.fetchQuery('data', () => fetchData(filters, false, from));
+        if (temp.errors) {
+            setIsLoading(false);
+            return;
+        }
         setData([...rawData, ...temp.payload]);
     };
 
