@@ -10,11 +10,11 @@ React.useLayoutEffect = React.useEffect;
 describe('formatPieData', () => {
     it('should format correctly', () => {
         const formattedData = [
-            { name: 'marketplace', value: 3298 },
-            { name: 'dsv', value: 1144 },
-            { name: 'direct', value: 995 },
-            { name: 'store', value: 16 },
-            { name: 'dc', value: 5587 },
+            { name: 'marketplace', value: '3298' },
+            { name: 'dsv', value: '1144' },
+            { name: 'direct', value: '995' },
+            { name: 'store', value: '16' },
+            { name: 'dc', value: '5587' },
         ];
 
         const result = formatPieData(payload[2].counts);
