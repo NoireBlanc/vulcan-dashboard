@@ -53,7 +53,7 @@ export default function Root() {
                                 {/* A <Switch> looks through its children <Route>s and
                             renders the first one that matches the current URL. */}
                                 <Switch>
-                                    <Route path="/home" exact>
+                                    <Route path="/mfe/transportation/vulcandashboard" exact>
                                         <Home />
                                     </Route>
                                 </Switch>

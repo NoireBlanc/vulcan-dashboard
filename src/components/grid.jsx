@@ -11,6 +11,8 @@ import { mapToShipment } from '../utils/mapToShipment.util';
 import { fetchData } from '../utils/queries';
 import { queryClient } from '../root.component';
 import { MenuItem, Box } from '@mui/material';
+import csvMaker from '../utils/csvMaker.util';
+import download from '../utils/download';
 
 const columns = [
     { field: 'customer_order_id', headerName: 'Customer Order Number', width: 180 },
@@ -45,7 +47,7 @@ export default function Grid({ data, totalHits, filters }) {
 
         for (let i = 0; i < totalHits && i < 10000; i += 1000) {
             const data = await queryClient.fetchQuery('data', () => fetchData(filters, false, i));
-            allRows.push(data.payload);
+            allRows.push(...data.payload);
         }
 
         let formattedRows = [];
@@ -53,11 +55,8 @@ export default function Grid({ data, totalHits, filters }) {
             formattedRows.push(mapToShipment(shipment));
         });
 
-        formattedRows.forEach((shipment) => {
-            apiRef.current.updateRows([shipment]);
-        });
-
-        apiRef.current.exportDataAsCsv();
+        const csv = csvMaker(formattedRows, columns);
+        download(csv, 'csv', 'ShipmentData');
     };
 
     const GridCsvExportMenuItem = (props) => {
